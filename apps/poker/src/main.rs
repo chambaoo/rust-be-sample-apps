@@ -37,4 +37,22 @@ fn main() {
     for (i, card) in hand.iter().enumerate() {
         println!("{:}: {:?} {:}", i + 1, card.suit, card.rank);
     }
+    println!("入れ替えたいカード番号(例: 1 2 3)");
+    let mut input = String::new();
+    std::io::stdin().read_line(&mut input).unwrap();
+
+    let numbers: Vec<usize> = input
+        .split_whitespace()
+        .map(|x| x.parse().unwrap())
+        .collect::<Vec<usize>>();
+
+    for number in numbers {
+        hand[number - 1] = deck.pop().unwrap()
+    }
+
+    println!("===== HAND =====");
+    hand.sort_by(|a, b| a.rank.cmp(&b.rank));
+    for (i, card) in hand.iter().enumerate() {
+        println!("{:}: {:?} {:}", i + 1, card.suit, card.rank);
+    }
 }
