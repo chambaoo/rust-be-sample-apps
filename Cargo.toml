@@ -1,0 +1,6 @@
+[workspace]
+members = [
+  "apps/quiz",
+  "apps/poker",
+]
+resolver = "2"
