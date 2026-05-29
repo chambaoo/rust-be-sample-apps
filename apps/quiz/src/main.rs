@@ -9,7 +9,6 @@ fn main() {
 
     let ans_input = ans_input.trim().parse::<u32>().unwrap();
 
-
     dbg!(ans_input);
 
     if dbg!(ans_input == 1 + 1) {
@@ -17,5 +16,4 @@ fn main() {
     } else {
         println!("不正解");
     }
-
 }
