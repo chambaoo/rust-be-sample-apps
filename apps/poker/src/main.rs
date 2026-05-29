@@ -27,5 +27,14 @@ fn main() {
     let mut rng = rand::rng();
     deck.shuffle(&mut rng);
 
-    println!("{:?}", deck);
+    let mut hand: Vec<Card> = Vec::new();
+    for _ in 0..5 {
+        hand.push(deck.pop().unwrap());
+    }
+
+    println!("===== HAND =====");
+    hand.sort_by(|a, b| a.rank.cmp(&b.rank));
+    for (i, card) in hand.iter().enumerate() {
+        println!("{:}: {:?} {:}", i + 1, card.suit, card.rank);
+    }
 }
