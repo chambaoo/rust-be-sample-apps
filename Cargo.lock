@@ -15,6 +15,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2c61cd05405eb1d0f3a4660f802bad76ece84b6e722426342ba5dd511f724e97"
 
 [[package]]
+name = "calculator"
+version = "0.1.0"
+
+[[package]]
 name = "cfg-if"
 version = "1.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
