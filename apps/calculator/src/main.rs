@@ -13,16 +13,36 @@ fn main() {
         let left: f64 = tokens[0].parse().unwrap();
         let right: f64 = tokens[2].parse().unwrap();
         let result = match tokens[1] {
-            "+" => left + right,
-            "-" => left - right,
-            "*" => left * right,
-            "/" => left / right,
+            "+" => add(left, right),
+            "-" => subtract(left, right),
+            "*" => multiply(left, right),
+            "/" => divide(left, right),
             _ => {
                 unreachable!()
             }
         };
-        println!(" => {}", result);
+        print_value(result);
 
         break;
     }
+}
+
+fn print_value(value: f64) {
+    println!(" => {}", value);
+}
+
+fn add(left: f64, right: f64) -> f64 {
+    left + right
+}
+
+fn subtract(left: f64, right: f64) -> f64 {
+    left - right
+}
+
+fn multiply(left: f64, right: f64) -> f64 {
+    left * right
+}
+
+fn divide(left: f64, right: f64) -> f64 {
+    left / right
 }
