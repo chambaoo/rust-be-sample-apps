@@ -16,12 +16,10 @@ fn main() {
         dbg!(tokens[0]);
 
         if tokens[0] == "m+" {
-            memory += prev_result;
-            print_value(memory);
+            add_to_memory(&mut memory, prev_result);
             continue;
         } else if tokens[0] == "m-" {
-            memory -= prev_result;
-            print_value(memory);
+            subtract_from_memory(&mut memory, prev_result);
             continue;
         }
 
@@ -70,4 +68,13 @@ fn multiply(left: f64, right: f64) -> f64 {
 
 fn divide(left: f64, right: f64) -> f64 {
     left / right
+}
+
+fn add_to_memory(memory: &mut f64, prev_result: f64) {
+    *memory += prev_result;
+    print_value(*memory);
+}
+fn subtract_from_memory(memory: &mut f64, prev_result: f64) {
+    *memory -= prev_result;
+    print_value(*memory);
 }
