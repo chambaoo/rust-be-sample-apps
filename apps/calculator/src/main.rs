@@ -25,15 +25,12 @@ fn main() {
             continue;
         }
 
-        // let left: f64 = tokens[0].parse().unwrap();
-        // let right: f64 = tokens[2].parse().unwrap();
-
         let left = if tokens[0] == "m" {
             memory
         } else {
             tokens[0].parse().unwrap()
         };
-        
+
         let right = if tokens[2] == "m" {
             memory
         } else {
@@ -50,7 +47,7 @@ fn main() {
             }
         };
         print_value(result);
-        
+
         prev_result = result;
     }
 }
