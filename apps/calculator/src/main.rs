@@ -1,7 +1,11 @@
 use std::io::stdin;
 
 fn main() {
+    let mut memory: f64 = 0.0;
+    let mut prev_result: f64 = 0.0;
+
     println!("数字 + - * / 数字を入力：");
+
     for line in stdin().lines() {
         let line = line.unwrap();
         if line.is_empty() {
@@ -9,9 +13,33 @@ fn main() {
         }
         // 空白で分割
         let tokens: Vec<&str> = line.split(char::is_whitespace).collect();
+        dbg!(tokens[0]);
 
-        let left: f64 = tokens[0].parse().unwrap();
-        let right: f64 = tokens[2].parse().unwrap();
+        if tokens[0] == "m+" {
+            memory += prev_result;
+            print_value(memory);
+            continue;
+        } else if tokens[0] == "m-" {
+            memory -= prev_result;
+            print_value(memory);
+            continue;
+        }
+
+        // let left: f64 = tokens[0].parse().unwrap();
+        // let right: f64 = tokens[2].parse().unwrap();
+
+        let left = if tokens[0] == "m" {
+            memory
+        } else {
+            tokens[0].parse().unwrap()
+        };
+        
+        let right = if tokens[2] == "m" {
+            memory
+        } else {
+            tokens[2].parse().unwrap()
+        };
+
         let result = match tokens[1] {
             "+" => add(left, right),
             "-" => subtract(left, right),
@@ -22,8 +50,8 @@ fn main() {
             }
         };
         print_value(result);
-
-        break;
+        
+        prev_result = result;
     }
 }
 
