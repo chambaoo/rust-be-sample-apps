@@ -1,4 +1,5 @@
 use clap::{Parser, Subcommand};
+use csv::Writer;
 
 #[derive(Parser)]
 #[clap(version = "1.0")]
@@ -17,12 +18,22 @@ enum Command {
 }
 
 fn main() {
-    // let command_name
-    //     = std::env::args().nth(0).unwrap_or("CLI".to_string());
-
-    // let name = std::env::args().nth(1).unwrap_or("World".to_string());
-
-    // println!("Hello {} via {}", name, command_name);
-
     let _args = App::parse();
+
+    match _args.command {
+        Command::New => new(),
+        Command::Deposit => unimplemented!(),
+        Command::Withdraw => unimplemented!(),
+        Command::Import => unimplemented!(),
+        Command::Report => unimplemented!(),
+    }
+}
+
+fn new() {
+    let mut writer = Writer::from_path("accounts.csv").unwrap();
+    writer 
+        .write_record(["日付", "用途", "金額"])
+        .unwrap();
+
+    writer.flush().unwrap();
 }
