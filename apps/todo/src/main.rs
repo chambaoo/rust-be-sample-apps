@@ -5,7 +5,7 @@ use askama_actix::TemplateToResponse;
 #[derive(Template)]
 #[template(path = "hello.html")]
 struct HelloTemplate {
-    name: String
+    name: String,
 }
 #[get("/hello")]
 async fn hello() -> String {
