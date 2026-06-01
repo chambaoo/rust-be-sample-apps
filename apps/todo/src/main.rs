@@ -1,18 +1,24 @@
-use actix_web::{App, HttpResponse, HttpServer, get, web};
+use actix_web::{App, HttpResponse, HttpServer, get, post, web};
 use askama::Template;
 use askama_actix::TemplateToResponse;
 use sqlx::{Row, SqlitePool};
 
-#[derive(Template)]
-#[template(path = "hello.html")]
-struct HelloTemplate {
-    name: String,
-}
+// #[derive(Template)]
+// #[template(path = "hello.html")]
+// struct HelloTemplate {
+//     name: String,
+// }
 
 #[derive(Template)]
 #[template(path = "todo.html")]
 struct TodoTemplate {
     tasks: Vec<String>,
+}
+
+#[derive(serde::Deserialize)]
+struct Task {
+    id: Option<String>,
+    task: Option<String>,
 }
 
 #[get("/")]
@@ -31,18 +37,48 @@ async fn todo(pool: web::Data<SqlitePool>) -> HttpResponse {
     todo.to_response()
 }
 
-#[get("/hello")]
-async fn hello() -> String {
-    "Hello.".to_string()
+#[post("/update")]
+async fn update(pool: web::Data<SqlitePool>, form: web::Form<Task>) -> HttpResponse {
+    let task = form.into_inner();
+
+    match task.id {
+        Some(id) => {
+            sqlx::query("DELETE FROM tasks WHERE task = ?")
+                .bind(id)
+                .execute(pool.as_ref())
+                .await
+                .unwrap();
+        }
+        None => {}
+    }
+    match task.task {
+        Some(task) if task != "" => {
+            sqlx::query("INSERT INTO tasks (task) VALUES (?)")
+                .bind(task)
+                .execute(pool.as_ref())
+                .await
+                .unwrap();
+        }
+        _ => {}
+    }
+
+    HttpResponse::Found()
+        .append_header(("Location", "/"))
+        .finish()
 }
 
-#[get("/hello/{name}")]
-async fn hello_name(name: web::Path<String>) -> HttpResponse {
-    let hello_name = HelloTemplate {
-        name: name.into_inner(),
-    };
-    hello_name.to_response()
-}
+// #[get("/hello")]
+// async fn hello() -> String {
+//     "Hello.".to_string()
+// }
+
+// #[get("/hello/{name}")]
+// async fn hello_name(name: web::Path<String>) -> HttpResponse {
+//     let hello_name = HelloTemplate {
+//         name: name.into_inner(),
+//     };
+//     hello_name.to_response()
+// }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -69,9 +105,10 @@ async fn main() -> std::io::Result<()> {
     // HttpServer::new(move || App::new().service(hello).service(hello_name).service(todo))
     HttpServer::new(move || {
         App::new()
-            .service(hello)
-            .service(hello_name)
+            // .service(hello)
+            // .service(hello_name)
             .service(todo)
+            .service(update)
             .app_data(web::Data::new(pool.clone()))
     })
     .bind(("127.0.0.1", 8080))?
