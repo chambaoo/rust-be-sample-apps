@@ -3,5 +3,6 @@ members = [
   "apps/quiz",
   "apps/poker",
   "apps/calculator",
+  "apps/account_book",
 ]
 resolver = "2"
