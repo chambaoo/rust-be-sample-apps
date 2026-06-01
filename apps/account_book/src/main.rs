@@ -1,10 +1,19 @@
-use clap::Parser;
+use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
 #[clap(version = "1.0")]
-struct Args {
-    arg1: String,
-    arg2: String,
+struct App {
+    #[clap(subcommand)]
+    command: Command,
+}
+
+#[derive(Subcommand)]
+enum Command {
+    New,
+    Deposit,
+    Withdraw,
+    Import,
+    Report,
 }
 
 fn main() {
@@ -15,5 +24,5 @@ fn main() {
 
     // println!("Hello {} via {}", name, command_name);
 
-    let _args = Args::parse();
+    let _args = App::parse();
 }
