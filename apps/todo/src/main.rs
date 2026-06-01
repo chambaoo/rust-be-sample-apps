@@ -2,6 +2,7 @@ use actix_web::{App, HttpResponse, HttpServer, get, post, web};
 use askama::Template;
 use askama_actix::TemplateToResponse;
 use sqlx::{Row, SqlitePool};
+use std::env;
 
 // #[derive(Template)]
 // #[template(path = "hello.html")]
@@ -82,6 +83,22 @@ async fn update(pool: web::Data<SqlitePool>, form: web::Form<Task>) -> HttpRespo
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    dotenvy::dotenv().ok();
+
+    let host_key = "HOST";
+    let port_key = "PORT";
+    let default_port = 8080;
+    let default_host = "127.0.0.1";
+
+    let host = env::var(host_key).unwrap_or_else(|_| default_host.to_string());
+    let port: u16 = env::var(port_key)
+        .unwrap_or_else(|_| default_port.to_string())
+        .parse()
+        .unwrap();
+
+    dbg!(&host);
+    dbg!(port);
+
     let pool = SqlitePool::connect("sqlite::memory:").await.unwrap();
     sqlx::query("CREATE TABLE TASKS (task TEXT)")
         .execute(&pool)
@@ -111,7 +128,7 @@ async fn main() -> std::io::Result<()> {
             .service(update)
             .app_data(web::Data::new(pool.clone()))
     })
-    .bind(("127.0.0.1", 8080))?
+    .bind((host, port))?
     .run()
     .await
 }
